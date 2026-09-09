@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>naviproxy</Name>
-  <Repository>ghcr.io/your-username/naviproxy:latest</Repository>
-  <Registry>https://github.com/your-username/naviproxy/pkgs/container/naviproxy</Registry>
+  <Repository>ghcr.io/sirataxero/naviproxy:latest</Repository>
+  <Registry>https://github.com/SirataXero/NaviProxy/pkgs/container/naviproxy</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/your-username/naviproxy/issues</Support>
-  <Project>https://github.com/your-username/naviproxy</Project>
+  <Support>https://github.com/SirataXero/NaviProxy/issues</Support>
+  <Project>https://github.com/SirataXero/NaviProxy</Project>
   <Overview>NaviProxy is an intelligent music proxy between third-party applications (Symfonium, Feishin, DSub, Ultrasonic) and your Navidrome music server. It features multi-source concurrent search (Tidal, Spotify, Apple Music, Deezer, Debrid, Usenet), quality-based threshold filtering, and simultaneous background library caching into your Navidrome storage directory.</Overview>
   <Category>MediaApp:Music MediaApp:Other Tools:</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
-  <TemplateURL>false</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/SirataXero/NaviProxy/main/unraid-template.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/deluan/navidrome/master/resources/logo-192.png</Icon>
   <ExtraParams>--restart unless-stopped</ExtraParams>
   <PostArgs/>

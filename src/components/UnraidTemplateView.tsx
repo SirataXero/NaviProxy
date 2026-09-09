@@ -73,8 +73,12 @@ export const UnraidTemplateView: React.FC = () => {
   <Config Name="Minimum Audio Quality" Target="MIN_QUALITY" Default="HIGH_MP3_320" Description="Minimum audio quality threshold (LOW_MP3_128, MID_MP3_256, HIGH_MP3_320, CD_FLAC_16_44, HIRES_FLAC_24_96, HIRES_FLAC_24_192)" Type="Variable" Display="advanced" Required="false" Mask="false">${minQuality}</Config>
 </Container>`;
 
+  // Template source selection
+  const [sourceMode, setSourceMode] = useState<'github' | 'live'>('github');
+  const githubRawUrl = 'https://raw.githubusercontent.com/SirataXero/NaviProxy/main/unraid-template.xml';
+
   const wgetPath = '/boot/config/plugins/dockerMan/templates-user/my-naviproxy.xml';
-  const downloadUrl = `${originUrl}/unraid-template.xml`;
+  const downloadUrl = sourceMode === 'github' ? githubRawUrl : `${originUrl}/unraid-template.xml`;
   const wgetSelectedCmd = `wget -O ${wgetPath} ${downloadUrl}`;
 
   const copyWget = () => {
@@ -148,15 +152,37 @@ export const UnraidTemplateView: React.FC = () => {
       </div>
 
       {/* Quick wget Command Bar */}
-      <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 space-y-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
             <Terminal className="w-4 h-4 text-amber-400" />
             <span className="text-xs font-bold uppercase tracking-wider text-zinc-300">
               Immediate Unraid Terminal Import Command
             </span>
           </div>
-          <span className="text-[11px] text-zinc-500">Run in Unraid WebGUI Terminal as root</span>
+
+          <div className="flex items-center bg-zinc-950 p-0.5 rounded-lg border border-zinc-800 text-xs">
+            <button
+              onClick={() => setSourceMode('github')}
+              className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                sourceMode === 'github'
+                  ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Public GitHub (SirataXero)
+            </button>
+            <button
+              onClick={() => setSourceMode('live')}
+              className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                sourceMode === 'live'
+                  ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Live App Server
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center justify-between bg-zinc-950 border border-zinc-800 rounded-xl p-3 font-mono text-xs text-amber-300 overflow-x-auto">
@@ -170,9 +196,16 @@ export const UnraidTemplateView: React.FC = () => {
           </button>
         </div>
 
-        <p className="text-[11px] text-zinc-400">
-          Target template directory on Unraid flash drive: <code className="text-zinc-300 font-mono">{wgetPath}</code>
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-zinc-400 gap-2">
+          <p>
+            Target template directory on Unraid flash drive: <code className="text-zinc-300 font-mono">{wgetPath}</code>
+          </p>
+          {sourceMode === 'github' && (
+            <p className="text-amber-400/90 font-medium">
+              Uses raw.githubusercontent.com so Unraid downloads direct raw XML (not the GitHub HTML preview).
+            </p>
+          )}
+        </div>
       </div>
 
       {/* 4-Step Step-by-Step Tutorial Cards */}

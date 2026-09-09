@@ -1,7 +1,6 @@
 package config
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -34,7 +33,6 @@ type AppConfig struct {
 
 type Manager struct {
 	mu       sync.RWMutex
-	db       *sql.DB
 	filePath string
 	current  AppConfig
 }

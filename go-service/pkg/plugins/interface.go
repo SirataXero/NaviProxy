@@ -10,12 +10,12 @@ import (
 type QualityTier int
 
 const (
-	QualityLowMP3128 QualityTier = iota + 1 // MP3 128 kbps
-	QualityMidMP3256                       // MP3 256 kbps / AAC 256 kbps
-	QualityHighMP3320                      // MP3 320 kbps
-	QualityCDLossless                      // FLAC/ALAC 16-bit / 44.1 kHz (~850-1000 kbps)
-	QualityHiResLossless96                 // FLAC 24-bit / 96 kHz (~2500-3000 kbps)
-	QualityHiResLossless192                // FLAC 24-bit / 192 kHz (~4500-9216 kbps)
+	QualityLowMP3128        QualityTier = iota + 1 // MP3 128 kbps
+	QualityMidMP3256                               // MP3 256 kbps / AAC 256 kbps
+	QualityHighMP3320                              // MP3 320 kbps
+	QualityCDLossless                              // FLAC/ALAC 16-bit / 44.1 kHz (~850-1000 kbps)
+	QualityHiResLossless96                         // FLAC 24-bit / 96 kHz (~2500-3000 kbps)
+	QualityHiResLossless192                        // FLAC 24-bit / 192 kHz (~4500-9216 kbps)
 )
 
 func (q QualityTier) String() string {

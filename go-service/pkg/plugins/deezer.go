@@ -20,9 +20,11 @@ func NewDeezerPlugin() *DeezerPlugin {
 	}
 }
 
-func (d *DeezerPlugin) ID() string          { return "deezer" }
-func (d *DeezerPlugin) Name() string        { return "Deezer HiFi" }
-func (d *DeezerPlugin) Description() string { return "16-bit 44.1kHz FLAC and MP3 320kbps direct audio streams" }
+func (d *DeezerPlugin) ID() string   { return "deezer" }
+func (d *DeezerPlugin) Name() string { return "Deezer HiFi" }
+func (d *DeezerPlugin) Description() string {
+	return "16-bit 44.1kHz FLAC and MP3 320kbps direct audio streams"
+}
 func (d *DeezerPlugin) MaxQuality() QualityTier { return QualityCDLossless }
 
 func (d *DeezerPlugin) Configure(cfg map[string]string) error {

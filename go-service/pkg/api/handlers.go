@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"io"
 	"net/http"
 	"runtime"
@@ -89,7 +89,7 @@ func (h *APIHandler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/api/docker-compose", func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, `{"error": "Docker config is managed via Unraid/Host in production."}`, http.StatusNotFound)
 	}).Methods("GET", "POST")
-	
+
 	router.HandleFunc("/api/go-project", func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, `{"error": "Code explorer not available in production."}`, http.StatusNotFound)
 	}).Methods("GET")

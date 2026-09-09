@@ -2,8 +2,8 @@ package proxy
 
 import (
 	"context"
-	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"time"
 
 	"github.com/navidrome/naviproxy/pkg/cache"
@@ -13,22 +13,22 @@ import (
 )
 
 type SearchResultStats struct {
-	Source   string `json:"source"`
-	Count    int    `json:"count"`
-	TookMs   int64  `json:"took_ms"`
-	Status   string `json:"status"`
+	Source string `json:"source"`
+	Count  int    `json:"count"`
+	TookMs int64  `json:"took_ms"`
+	Status string `json:"status"`
 }
 
 type UnifiedSearchResponse struct {
-	Query            string              `json:"query"`
-	Type             string              `json:"type"`
-	MinQuality       string              `json:"min_quality"`
-	TotalFound       int                 `json:"total_found"`
-	FilteredOutCount int                 `json:"filtered_out_count"`
-	TookMs           int64               `json:"took_ms"`
-	Cached           bool                `json:"cached"`
+	Query            string               `json:"query"`
+	Type             string               `json:"type"`
+	MinQuality       string               `json:"min_quality"`
+	TotalFound       int                  `json:"total_found"`
+	FilteredOutCount int                  `json:"filtered_out_count"`
+	TookMs           int64                `json:"took_ms"`
+	Cached           bool                 `json:"cached"`
 	Results          []plugins.MusicTrack `json:"results"`
-	SourcesQueried   []SearchResultStats `json:"sources_queried"`
+	SourcesQueried   []SearchResultStats  `json:"sources_queried"`
 }
 
 type Service struct {

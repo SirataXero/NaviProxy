@@ -28,9 +28,11 @@ func NewNavidromePlugin() *NavidromePlugin {
 	}
 }
 
-func (n *NavidromePlugin) ID() string          { return "navidrome" }
-func (n *NavidromePlugin) Name() string        { return "Navidrome Local Server" }
-func (n *NavidromePlugin) Description() string { return "Direct integration with local Navidrome Subsonic API" }
+func (n *NavidromePlugin) ID() string   { return "navidrome" }
+func (n *NavidromePlugin) Name() string { return "Navidrome Local Server" }
+func (n *NavidromePlugin) Description() string {
+	return "Direct integration with local Navidrome Subsonic API"
+}
 func (n *NavidromePlugin) MaxQuality() QualityTier { return QualityHiResLossless192 }
 
 func (n *NavidromePlugin) Configure(cfg map[string]string) error {

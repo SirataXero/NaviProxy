@@ -23,9 +23,11 @@ func NewUsenetPlugin() *UsenetPlugin {
 	}
 }
 
-func (u *UsenetPlugin) ID() string          { return "usenet" }
-func (u *UsenetPlugin) Name() string        { return "Usenet Indexers (Newznab)" }
-func (u *UsenetPlugin) Description() string { return "Lossless music releases from Usenet indexers with SABnzbd/NZBGet integration" }
+func (u *UsenetPlugin) ID() string   { return "usenet" }
+func (u *UsenetPlugin) Name() string { return "Usenet Indexers (Newznab)" }
+func (u *UsenetPlugin) Description() string {
+	return "Lossless music releases from Usenet indexers with SABnzbd/NZBGet integration"
+}
 func (u *UsenetPlugin) MaxQuality() QualityTier { return QualityHiResLossless192 }
 
 func (u *UsenetPlugin) Configure(cfg map[string]string) error {

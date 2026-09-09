@@ -22,9 +22,11 @@ func NewDebridPlugin() *DebridPlugin {
 	}
 }
 
-func (d *DebridPlugin) ID() string          { return "debrid" }
-func (d *DebridPlugin) Name() string        { return "Debrid (Real-Debrid / Torbox)" }
-func (d *DebridPlugin) Description() string { return "Instant cached torrent lossless FLAC & Master releases via Debrid API" }
+func (d *DebridPlugin) ID() string   { return "debrid" }
+func (d *DebridPlugin) Name() string { return "Debrid (Real-Debrid / Torbox)" }
+func (d *DebridPlugin) Description() string {
+	return "Instant cached torrent lossless FLAC & Master releases via Debrid API"
+}
 func (d *DebridPlugin) MaxQuality() QualityTier { return QualityHiResLossless192 }
 
 func (d *DebridPlugin) Configure(cfg map[string]string) error {

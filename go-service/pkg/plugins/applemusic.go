@@ -23,9 +23,11 @@ func NewAppleMusicPlugin() *AppleMusicPlugin {
 	}
 }
 
-func (a *AppleMusicPlugin) ID() string          { return "applemusic" }
-func (a *AppleMusicPlugin) Name() string        { return "Apple Music" }
-func (a *AppleMusicPlugin) Description() string { return "Apple Lossless (ALAC) up to 24-bit/192kHz and AAC 256kbps" }
+func (a *AppleMusicPlugin) ID() string   { return "applemusic" }
+func (a *AppleMusicPlugin) Name() string { return "Apple Music" }
+func (a *AppleMusicPlugin) Description() string {
+	return "Apple Lossless (ALAC) up to 24-bit/192kHz and AAC 256kbps"
+}
 func (a *AppleMusicPlugin) MaxQuality() QualityTier { return QualityHiResLossless192 }
 
 func (a *AppleMusicPlugin) Configure(cfg map[string]string) error {

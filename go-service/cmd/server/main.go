@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/navidrome/naviproxy/pkg/logger"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"

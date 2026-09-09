@@ -26,9 +26,11 @@ func NewTidalPlugin() *TidalPlugin {
 	}
 }
 
-func (t *TidalPlugin) ID() string          { return "tidal" }
-func (t *TidalPlugin) Name() string        { return "Tidal HiFi / Master" }
-func (t *TidalPlugin) Description() string { return "Lossless FLAC and Hi-Res 24-bit/192kHz MQA/FLAC streaming" }
+func (t *TidalPlugin) ID() string   { return "tidal" }
+func (t *TidalPlugin) Name() string { return "Tidal HiFi / Master" }
+func (t *TidalPlugin) Description() string {
+	return "Lossless FLAC and Hi-Res 24-bit/192kHz MQA/FLAC streaming"
+}
 func (t *TidalPlugin) MaxQuality() QualityTier { return QualityHiResLossless192 }
 
 func (t *TidalPlugin) Configure(cfg map[string]string) error {

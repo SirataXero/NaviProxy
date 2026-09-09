@@ -19,16 +19,16 @@ type SourceConfig struct {
 }
 
 type AppConfig struct {
-	NavidromeServerURL string                  `json:"navidrome_server_url"`
-	NavidromeUsername  string                  `json:"navidrome_username"`
-	NavidromeToken     string                  `json:"navidrome_token"`
-	NavidromeSalt      string                  `json:"navidrome_salt"`
-	DownloadFolder     string                  `json:"download_folder"`
-	MinQuality         plugins.QualityTier     `json:"min_quality"`
-	AutoTriggerDownload bool                   `json:"auto_trigger_download"`
-	ConcurrentLimit    int                     `json:"concurrent_limit"`
-	Sources            map[string]SourceConfig `json:"sources"`
-	RedisAddr          string                  `json:"redis_addr"`
+	NavidromeServerURL  string                  `json:"navidrome_server_url"`
+	NavidromeUsername   string                  `json:"navidrome_username"`
+	NavidromeToken      string                  `json:"navidrome_token"`
+	NavidromeSalt       string                  `json:"navidrome_salt"`
+	DownloadFolder      string                  `json:"download_folder"`
+	MinQuality          plugins.QualityTier     `json:"min_quality"`
+	AutoTriggerDownload bool                    `json:"auto_trigger_download"`
+	ConcurrentLimit     int                     `json:"concurrent_limit"`
+	Sources             map[string]SourceConfig `json:"sources"`
+	RedisAddr           string                  `json:"redis_addr"`
 }
 
 type Manager struct {

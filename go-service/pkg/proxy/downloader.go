@@ -2,8 +2,8 @@ package proxy
 
 import (
 	"context"
-	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"io"
 	"os"
 	"path/filepath"

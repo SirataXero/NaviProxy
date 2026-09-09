@@ -24,9 +24,11 @@ func NewSpotifyPlugin() *SpotifyPlugin {
 	}
 }
 
-func (s *SpotifyPlugin) ID() string          { return "spotify" }
-func (s *SpotifyPlugin) Name() string        { return "Spotify Premium" }
-func (s *SpotifyPlugin) Description() string { return "OGG Vorbis 320kbps and rich Spotify catalog metadata" }
+func (s *SpotifyPlugin) ID() string   { return "spotify" }
+func (s *SpotifyPlugin) Name() string { return "Spotify Premium" }
+func (s *SpotifyPlugin) Description() string {
+	return "OGG Vorbis 320kbps and rich Spotify catalog metadata"
+}
 func (s *SpotifyPlugin) MaxQuality() QualityTier { return QualityHighMP3320 }
 
 func (s *SpotifyPlugin) Configure(cfg map[string]string) error {

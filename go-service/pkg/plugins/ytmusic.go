@@ -20,9 +20,11 @@ func NewYTMusicPlugin() *YTMusicPlugin {
 	}
 }
 
-func (y *YTMusicPlugin) ID() string          { return "ytmusic" }
-func (y *YTMusicPlugin) Name() string        { return "YouTube Music" }
-func (y *YTMusicPlugin) Description() string { return "YouTube Music 256kbps AAC / Opus audio stream extraction" }
+func (y *YTMusicPlugin) ID() string   { return "ytmusic" }
+func (y *YTMusicPlugin) Name() string { return "YouTube Music" }
+func (y *YTMusicPlugin) Description() string {
+	return "YouTube Music 256kbps AAC / Opus audio stream extraction"
+}
 func (y *YTMusicPlugin) MaxQuality() QualityTier { return QualityMidMP3256 }
 
 func (y *YTMusicPlugin) Configure(cfg map[string]string) error {

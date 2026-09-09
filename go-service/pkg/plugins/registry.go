@@ -9,16 +9,16 @@ import (
 
 // PluginStatus tracks current state and metrics of an enabled plugin
 type PluginStatus struct {
-	Plugin       SourcePlugin  `json:"-"`
-	ID           string        `json:"id"`
-	Name         string        `json:"name"`
-	Enabled      bool          `json:"enabled"`
-	Priority     int           `json:"priority"` // lower number = higher priority
-	AvgLatencyMs int64         `json:"avg_latency_ms"`
-	LastError    string        `json:"last_error,omitempty"`
-	LastChecked  time.Time     `json:"last_checked"`
-	SuccessCount int64         `json:"success_count"`
-	FailureCount int64         `json:"failure_count"`
+	Plugin       SourcePlugin `json:"-"`
+	ID           string       `json:"id"`
+	Name         string       `json:"name"`
+	Enabled      bool         `json:"enabled"`
+	Priority     int          `json:"priority"` // lower number = higher priority
+	AvgLatencyMs int64        `json:"avg_latency_ms"`
+	LastError    string       `json:"last_error,omitempty"`
+	LastChecked  time.Time    `json:"last_checked"`
+	SuccessCount int64        `json:"success_count"`
+	FailureCount int64        `json:"failure_count"`
 }
 
 // Registry manages source plugins with thread safety

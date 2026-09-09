@@ -4,18 +4,18 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# Install build tools and SQLite dev libraries
-RUN apk add --no-cache git gcc musl-dev
+# Install build tools and certificates
+RUN apk add --no-cache git ca-certificates tzdata
 
-# Copy Go module manifests and download dependencies
+# Copy source tree and manifests
 COPY go.mod go.sum* ./
-RUN go mod download
-
-# Copy source tree
 COPY . .
 
-# Build statically linked binary
-RUN CGO_ENABLED=1 GOOS=linux go build -ldflags="-s -w" -o /app/naviproxy ./cmd/server/main.go
+# Generate and verify go.sum checksums inside the container
+RUN go mod tidy
+
+# Build statically-linked binary (pure Go, CGO disabled for maximum portability)
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w -extldflags '-static'" -o /app/naviproxy ./cmd/server/main.go
 
 # Stage 2: Minimal runtime image with ffmpeg and ca-certificates
 FROM alpine:3.19

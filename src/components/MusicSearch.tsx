@@ -232,17 +232,17 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span className="font-semibold text-zinc-200">Proxy Execution Summary:</span>
               <span className="text-zinc-400">
-                Found <span className="text-amber-400 font-bold">{searchResponse.totalResults}</span> matches in{' '}
-                <span className="text-cyan-400 font-mono font-bold">{searchResponse.tookMs}ms</span>
+                Found <span className="text-amber-400 font-bold">{(searchResponse.totalResults || searchResponse.total_found || 0)}</span> matches in{' '}
+                <span className="text-cyan-400 font-mono font-bold">{(searchResponse.tookMs || searchResponse.took_ms || 0)}ms</span>
                 {searchResponse.cached && <span className="ml-1 text-emerald-400">(from cache)</span>}
               </span>
             </div>
 
-            {searchResponse.filteredOutCount > 0 && (
+            {(searchResponse.filteredOutCount || searchResponse.filtered_out_count || 0) > 0 && (
               <div className="flex items-center space-x-1 px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300">
                 <Info className="w-3.5 h-3.5" />
                 <span>
-                  Filtered out <strong className="font-bold">{searchResponse.filteredOutCount}</strong> tracks below threshold ({String(selectedQuality).replace(/_/g, ' ')})
+                  Filtered out <strong className="font-bold">{(searchResponse.filteredOutCount || searchResponse.filtered_out_count || 0)}</strong> tracks below threshold ({String(selectedQuality).replace(/_/g, ' ')})
                 </span>
               </div>
             )}
@@ -250,7 +250,7 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
 
           {/* Sources Fan-Out Response Times */}
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 pt-3">
-            {searchResponse.sourcesQueried.map((src) => (
+            {(searchResponse.sourcesQueried || searchResponse.sources_queried || []).map((src) => (
               <div
                 key={src.source}
                 onClick={() =>
@@ -269,7 +269,7 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
                   {src.count} found
                 </div>
                 <div className="text-[10px] text-zinc-500 font-mono">
-                  {src.tookMs}ms
+                  {(src.tookMs || src.took_ms || 0)}ms
                 </div>
               </div>
             ))}
@@ -333,7 +333,7 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
                 <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                   <div className="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800">
                     <img
-                      src={track.coverArtUrl || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&h=100&fit=crop'}
+                      src={(track.coverArtUrl || track.cover_art_url) || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&h=100&fit=crop'}
                       alt={track.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     />
@@ -352,7 +352,7 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
                       <span className="text-sm sm:text-base font-semibold text-zinc-100 truncate group-hover:text-amber-400 transition-colors">
                         {track.title}
                       </span>
-                      {track.inLocalLibrary ? (
+                      {(track.inLocalLibrary || track.in_local_library) ? (
                         <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1">
                           <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                           <span>In Navidrome</span>

@@ -25,7 +25,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
   // Sync audio source when track changes
   useEffect(() => {
     if (!currentTrack || !audioRef.current) return;
-    const streamUrl = currentTrack.streamUrl || `/stream/${currentTrack.source}/${currentTrack.sourceId}`;
+    const streamUrl = (currentTrack.streamUrl || currentTrack.stream_url) || `/stream/${currentTrack.source}/${(currentTrack.sourceId || currentTrack.source_id)}`;
     audioRef.current.src = streamUrl;
     audioRef.current.volume = volume;
     if (isPlaying) {
@@ -115,9 +115,9 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
           {/* Left: Track Information & Badges */}
           <div className="flex items-center space-x-3 w-full sm:w-1/3 min-w-0">
             <div className="relative flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800">
-              {currentTrack.coverArtUrl ? (
+              {(currentTrack.coverArtUrl || currentTrack.cover_art_url) ? (
                 <img
-                  src={currentTrack.coverArtUrl}
+                  src={(currentTrack.coverArtUrl || currentTrack.cover_art_url)}
                   alt={currentTrack.title}
                   className="w-full h-full object-cover"
                 />
@@ -142,7 +142,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({
                 <span className="text-sm font-semibold text-zinc-100 truncate">
                   {currentTrack.title}
                 </span>
-                {currentTrack.inLocalLibrary && (
+                {(currentTrack.inLocalLibrary || currentTrack.in_local_library) && (
                   <span className="px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     Navidrome
                   </span>

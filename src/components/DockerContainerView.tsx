@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Server, Save, Check, AlertCircle } from 'lucide-react';
+import { Server, Save, Check, AlertCircle, Trash2, Plus } from 'lucide-react';
 
 export const DockerContainerView: React.FC = () => {
   const [composeData, setComposeData] = useState<any>(null);
@@ -10,8 +10,11 @@ export const DockerContainerView: React.FC = () => {
 
   // Editable states
   const [envVars, setEnvVars] = useState<{ key: string; value: string }[]>([]);
-  const [volumes, setVolumes] = useState<string[]>([]);
-  const [ports, setPorts] = useState<string[]>([]);
+  const [volumes, setVolumes] = useState<{ host: string; container: string }[]>([]);
+  const [ports, setPorts] = useState<{ host: string; container: string }[]>([]);
+
+  // Delete confirmation state
+  const [volumeToDelete, setVolumeToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/docker-compose')
@@ -25,14 +28,27 @@ export const DockerContainerView: React.FC = () => {
             envs.map((e: string) => {
               const idx = e.indexOf('=');
               if (idx > -1) {
-                return { key: e.substring(0, idx), value: e.substring(idx + 1) };
+                let key = e.substring(0, idx);
+                if (key === 'NAVIDROME_TOKEN') key = 'NAVIDROME_PASSWORD'; // ensure upgrade
+                return { key, value: e.substring(idx + 1) };
               }
               return { key: e, value: '' };
             })
           );
 
-          setVolumes(data.services.naviproxy.volumes || []);
-          setPorts(data.services.naviproxy.ports || []);
+          setVolumes(
+            (data.services.naviproxy.volumes || []).map((v: string) => {
+              const parts = v.split(':');
+              return { host: parts[0] || '', container: parts[1] || '' };
+            })
+          );
+
+          setPorts(
+            (data.services.naviproxy.ports || []).map((p: string) => {
+              const parts = p.split(':');
+              return { host: parts[0] || '', container: parts[1] || '' };
+            })
+          );
         } else {
           setError('Could not parse docker-compose.yml properly.');
         }
@@ -53,8 +69,12 @@ export const DockerContainerView: React.FC = () => {
       updatedCompose.services.naviproxy.environment = envVars.map(
         (e) => `${e.key}=${e.value}`
       );
-      updatedCompose.services.naviproxy.volumes = volumes;
-      updatedCompose.services.naviproxy.ports = ports;
+      updatedCompose.services.naviproxy.volumes = volumes
+        .filter((v) => v.host || v.container)
+        .map((v) => `${v.host}:${v.container}`);
+      updatedCompose.services.naviproxy.ports = ports
+        .filter((p) => p.host || p.container)
+        .map((p) => `${p.host}:${p.container}`);
 
       const res = await fetch('/api/docker-compose', {
         method: 'POST',
@@ -83,15 +103,32 @@ export const DockerContainerView: React.FC = () => {
     setEnvVars(newEnv);
   };
 
-  const handleVolumeChange = (index: number, val: string) => {
+  const handleVolumeChange = (index: number, field: 'host' | 'container', val: string) => {
     const newVol = [...volumes];
-    newVol[index] = val;
+    newVol[index][field] = val;
     setVolumes(newVol);
   };
 
-  const handlePortChange = (index: number, val: string) => {
+  const addVolume = () => {
+    setVolumes([...volumes, { host: '', container: '' }]);
+  };
+
+  const confirmDeleteVolume = (index: number) => {
+    setVolumeToDelete(index);
+  };
+
+  const deleteVolume = () => {
+    if (volumeToDelete !== null) {
+      const newVol = [...volumes];
+      newVol.splice(volumeToDelete, 1);
+      setVolumes(newVol);
+      setVolumeToDelete(null);
+    }
+  };
+
+  const handlePortChange = (index: number, field: 'host' | 'container', val: string) => {
     const newPorts = [...ports];
-    newPorts[index] = val;
+    newPorts[index][field] = val;
     setPorts(newPorts);
   };
 
@@ -104,7 +141,33 @@ export const DockerContainerView: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Delete Confirmation Modal */}
+      {volumeToDelete !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-2xl max-w-sm w-full mx-4">
+            <h3 className="text-lg font-bold text-zinc-100 mb-2">Are you sure?</h3>
+            <p className="text-zinc-400 text-sm mb-6">
+              This will remove your volume mapping from your Docker container.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setVolumeToDelete(null)}
+                className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={deleteVolume}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors text-sm font-medium"
+              >
+                Delete Volume
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-xl">
         <div className="flex items-center justify-between mb-4">
@@ -149,10 +212,10 @@ export const DockerContainerView: React.FC = () => {
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Environment Variables */}
           <div>
-            <h3 className="text-lg font-semibold text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
+            <h3 className="text-lg font-semibold text-zinc-200 mb-4 border-b border-zinc-800 pb-2">
               Environment Variables
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -172,19 +235,46 @@ export const DockerContainerView: React.FC = () => {
 
           {/* Volume Mappings */}
           <div>
-            <h3 className="text-lg font-semibold text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
-              Volume Mappings
-            </h3>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center justify-between mb-4 border-b border-zinc-800 pb-2">
+              <h3 className="text-lg font-semibold text-zinc-200">Volume Mappings</h3>
+              <button
+                onClick={addVolume}
+                className="flex items-center space-x-1 px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-medium transition-colors border border-zinc-700"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add</span>
+              </button>
+            </div>
+            <div className="space-y-4">
               {volumes.map((vol, i) => (
-                <div key={i} className="flex flex-col space-y-1">
-                  <label className="text-xs text-zinc-400 font-mono">Volume Binding {i + 1}</label>
-                  <input
-                    type="text"
-                    value={vol}
-                    onChange={(e) => handleVolumeChange(i, e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
+                <div key={i} className="flex flex-col sm:flex-row gap-4 items-start sm:items-end bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
+                  <div className="flex-1 w-full space-y-1">
+                    <label className="text-xs text-zinc-400 font-mono">Host:</label>
+                    <input
+                      type="text"
+                      value={vol.host}
+                      onChange={(e) => handleVolumeChange(i, 'host', e.target.value)}
+                      placeholder="/mnt/user/data"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex-1 w-full space-y-1">
+                    <label className="text-xs text-zinc-400 font-mono">Local Container:</label>
+                    <input
+                      type="text"
+                      value={vol.container}
+                      onChange={(e) => handleVolumeChange(i, 'container', e.target.value)}
+                      placeholder="/app/data"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    onClick={() => confirmDeleteVolume(i)}
+                    className="p-2.5 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                    title="Delete Volume"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -192,19 +282,30 @@ export const DockerContainerView: React.FC = () => {
 
           {/* Port Mappings */}
           <div>
-            <h3 className="text-lg font-semibold text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
+            <h3 className="text-lg font-semibold text-zinc-200 mb-4 border-b border-zinc-800 pb-2">
               Port Mappings
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               {ports.map((port, i) => (
-                <div key={i} className="flex flex-col space-y-1">
-                  <label className="text-xs text-zinc-400 font-mono">Port Binding {i + 1}</label>
-                  <input
-                    type="text"
-                    value={port}
-                    onChange={(e) => handlePortChange(i, e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
+                <div key={i} className="flex flex-col sm:flex-row gap-4 items-start bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
+                  <div className="flex-1 w-full space-y-1">
+                    <label className="text-xs text-zinc-400 font-mono">Host Port:</label>
+                    <input
+                      type="text"
+                      value={port.host}
+                      onChange={(e) => handlePortChange(i, 'host', e.target.value)}
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex-1 w-full space-y-1">
+                    <label className="text-xs text-zinc-400 font-mono">Container Port:</label>
+                    <input
+                      type="text"
+                      value={port.container}
+                      onChange={(e) => handlePortChange(i, 'container', e.target.value)}
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
                 </div>
               ))}
             </div>

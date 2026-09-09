@@ -12,7 +12,7 @@ services:
     environment:
       - NAVIDROME_URL=http://192.168.1.100:4533
       - NAVIDROME_USER=admin
-      - NAVIDROME_TOKEN=
+      - NAVIDROME_PASSWORD=
       - REDIS_URL=redis://192.168.1.100:6379
       - DOWNLOAD_DIR=/music/downloads
       - MIN_QUALITY=HIGH_MP3_320

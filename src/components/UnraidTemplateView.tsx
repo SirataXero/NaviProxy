@@ -14,12 +14,15 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
+  AlertTriangle,
+  Code2,
 } from 'lucide-react';
 
 export const UnraidTemplateView: React.FC = () => {
   const [copiedWget, setCopiedWget] = useState(false);
   const [copiedXml, setCopiedXml] = useState(false);
   const [copiedSmbPath, setCopiedSmbPath] = useState(false);
+  const [copiedBuildCmd, setCopiedBuildCmd] = useState(false);
 
   // Dynamic template customization parameters
   const [webPort, setWebPort] = useState('8080');
@@ -97,6 +100,14 @@ export const UnraidTemplateView: React.FC = () => {
     navigator.clipboard.writeText(wgetPath);
     setCopiedSmbPath(true);
     setTimeout(() => setCopiedSmbPath(false), 2500);
+  };
+
+  const directBuildCmd = 'docker build -t ghcr.io/sirataxero/naviproxy:latest https://github.com/SirataXero/NaviProxy.git#main:go-service';
+
+  const copyBuildCmd = () => {
+    navigator.clipboard.writeText(directBuildCmd);
+    setCopiedBuildCmd(true);
+    setTimeout(() => setCopiedBuildCmd(false), 2500);
   };
 
   const downloadXmlFile = () => {
@@ -205,6 +216,68 @@ export const UnraidTemplateView: React.FC = () => {
               Uses raw.githubusercontent.com so Unraid downloads direct raw XML (not the GitHub HTML preview).
             </p>
           )}
+        </div>
+      </div>
+
+      {/* GHCR "denied" Troubleshooting Callout */}
+      <div className="bg-amber-950/20 border border-amber-500/30 rounded-2xl p-5 space-y-3.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 text-amber-400">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+            <h3 className="text-sm font-bold text-zinc-100">
+              Seeing <span className="font-mono text-xs text-amber-300 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-500/30">Head "...manifests/latest": denied</span> in Unraid?
+            </h3>
+          </div>
+          <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+            Quick Fix
+          </span>
+        </div>
+
+        <p className="text-xs text-zinc-300 leading-relaxed">
+          GitHub Container Registry (GHCR) returns <code className="text-amber-300 font-mono">denied</code> when an image hasn't been built &amp; published to GHCR yet, or when the GitHub Package is set to <strong>Private</strong>. Pick either of these two instant solutions:
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          {/* Solution 1: Direct Unraid Build */}
+          <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-amber-400 flex items-center space-x-1.5">
+                <Code2 className="w-3.5 h-3.5" />
+                <span>Option 1: Build Locally on Unraid (Instant)</span>
+              </span>
+            </div>
+            <p className="text-zinc-400 text-[11px] leading-relaxed">
+              Run this 1-line command in your Unraid Terminal. Docker will compile the image right on your server. Afterwards, clicking <strong>Apply</strong> in Unraid will launch immediately:
+            </p>
+            <div className="flex items-center justify-between bg-zinc-950 border border-zinc-800 rounded-lg p-2 font-mono text-[11px] text-zinc-200 overflow-x-auto">
+              <span className="select-all pr-2 truncate">{directBuildCmd}</span>
+              <button
+                onClick={copyBuildCmd}
+                className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] font-sans flex items-center space-x-1 flex-shrink-0 cursor-pointer"
+              >
+                {copiedBuildCmd ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedBuildCmd ? 'Copied' : 'Copy'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Solution 2: GitHub Actions & Public Package */}
+          <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-zinc-200 flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Option 2: Publish via GitHub Actions</span>
+              </span>
+            </div>
+            <p className="text-zinc-400 text-[11px] leading-relaxed">
+              We added <code className="text-zinc-300 font-mono">.github/workflows/docker-publish.yml</code> to your repo. Once pushed to GitHub:
+            </p>
+            <ol className="list-decimal list-inside text-zinc-400 text-[11px] space-y-1">
+              <li>GitHub Actions builds &amp; pushes the image automatically.</li>
+              <li>Go to your GitHub repo <ArrowRight className="w-2.5 h-2.5 inline mx-0.5 text-zinc-500" /> <strong>Packages</strong> <ArrowRight className="w-2.5 h-2.5 inline mx-0.5 text-zinc-500" /> <strong>Package Settings</strong>.</li>
+              <li>Change visibility from <strong>Private</strong> to <strong>Public</strong> so Unraid can pull it freely without credentials.</li>
+            </ol>
+          </div>
         </div>
       </div>
 

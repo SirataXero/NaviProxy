@@ -1,0 +1,6 @@
+{
+  "name": "NaviProxy - Navidrome Music Proxy",
+  "description": "Dockerized high-performance music proxy service between third-party applications and Navidrome with multi-source search, quality filtering, and unified streaming.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

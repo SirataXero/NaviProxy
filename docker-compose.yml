@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  naviproxy:
+    image: ghcr.io/sirataxero/naviproxy:latest
+    container_name: naviproxy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/mnt/user/music:/music"
+      - "/mnt/user/appdata/naviproxy:/config"
+    environment:
+      - NAVIDROME_URL=http://192.168.1.100:4533
+      - NAVIDROME_USER=admin
+      - NAVIDROME_TOKEN=
+      - REDIS_URL=redis://192.168.1.100:6379
+      - DOWNLOAD_DIR=/music/downloads
+      - MIN_QUALITY=HIGH_MP3_320

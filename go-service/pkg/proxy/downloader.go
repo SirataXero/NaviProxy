@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -205,7 +206,8 @@ func sanitizeFilename(s string) string {
 		return "Unknown"
 	}
 	for _, c := range []string{"/", "\\", ":", "*", "?", "\"", "<", ">", "|"} {
-		s = filepath.Clean(s)
+		s = strings.ReplaceAll(s, c, "_")
 	}
+	s = filepath.Clean(s)
 	return s
 }

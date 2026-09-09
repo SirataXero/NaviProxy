@@ -7,7 +7,7 @@ import { DownloadManager } from './components/DownloadManager';
 import { MetricsDashboard } from './components/MetricsDashboard';
 import { ApiPlayground } from './components/ApiPlayground';
 import { CodeExplorer } from './components/CodeExplorer';
-import { UnraidTemplateView } from './components/UnraidTemplateView';
+import { DockerContainerView } from './components/DockerContainerView';
 import { AudioPlayerBar } from './components/AudioPlayerBar';
 import { AppConfig, DownloadTask, MusicTrack, SystemMetrics } from './types';
 
@@ -176,7 +176,7 @@ export function App() {
           />
         )}
 
-        {activeTab === 'unraid' && <UnraidTemplateView />}
+        {activeTab === 'docker' && <DockerContainerView />}
 
         {activeTab === 'metrics' && (
           <MetricsDashboard metrics={metrics} logs={logs} />

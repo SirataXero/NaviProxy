@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'plugins', label: 'Source Plugins', icon: ShieldCheck },
     { id: 'quality', label: 'Quality Rules', icon: Database },
     { id: 'downloads', label: 'Downloads', icon: Download, badge: activeDownloadsCount },
-    { id: 'unraid', label: 'Unraid Template', icon: HardDrive },
+    { id: 'docker', label: 'Docker Container', icon: HardDrive },
     { id: 'metrics', label: 'Performance & Logs', icon: Activity },
     { id: 'api', label: 'API & Subsonic', icon: Server },
     { id: 'code', label: 'Go & Docker Code', icon: Database },

@@ -1,3 +1,4 @@
+import yaml from "yaml";
 import express, { Request, Response } from "express";
 import http from "http";
 import path from "path";
@@ -806,17 +807,34 @@ app.get(["/downloads", "/api/downloads"], (req: Request, res: Response) => {
   });
 });
 
-// GET /unraid-template.xml & /api/unraid-template.xml - Serves raw Unraid XML template for wget / manual import
-app.get(["/unraid-template.xml", "/api/unraid-template.xml"], (req: Request, res: Response) => {
-  const filePath = path.join(process.cwd(), "unraid-template.xml");
-  if (fs.existsSync(filePath)) {
-    res.setHeader("Content-Type", "application/xml; charset=utf-8");
-    if (req.query.download === "true") {
-      res.setHeader("Content-Disposition", 'attachment; filename="my-naviproxy.xml"');
+// (Removed unraid endpoint)
+
+
+// GET /api/docker-compose
+app.get("/api/docker-compose", (req, res) => {
+  try {
+    const filePath = path.join(process.cwd(), "docker-compose.yml");
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "docker-compose.yml not found" });
     }
-    res.sendFile(filePath);
-  } else {
-    res.status(404).json({ error: "Template file unraid-template.xml not found" });
+    const content = fs.readFileSync(filePath, "utf-8");
+    const parsed = yaml.parse(content);
+    res.json(parsed);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/docker-compose
+app.post("/api/docker-compose", (req, res) => {
+  try {
+    const filePath = path.join(process.cwd(), "docker-compose.yml");
+    const newCompose = req.body;
+    const yamlStr = yaml.stringify(newCompose);
+    fs.writeFileSync(filePath, yamlStr, "utf-8");
+    res.json({ success: true, message: "docker-compose.yml updated successfully." });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

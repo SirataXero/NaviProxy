@@ -226,7 +226,7 @@ export function App() {
     addLog(`Initiated chunked stream for "${track.title}" from source [${track.source.toUpperCase()}]`, 'stream');
 
     // Auto-trigger simultaneous download if configured
-    if (config?.downloads.autoTriggerOnStream && !track.inLocalLibrary) {
+    if (config?.downloads?.autoTriggerOnStream && !track.inLocalLibrary) {
       handleDownloadTrack(track);
     }
   };
@@ -281,7 +281,7 @@ export function App() {
             onPlayTrack={handlePlayTrack}
             onDownloadTrack={handleDownloadTrack}
             currentPlayingTrack={currentPlayingTrack}
-            minQualitySetting={config?.quality.minQuality || 'HIGH_MP3_320'}
+            minQualitySetting={config?.quality?.minQuality || 'HIGH_MP3_320'}
           />
         )}
 

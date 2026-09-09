@@ -7,6 +7,7 @@ import { DownloadManager } from './components/DownloadManager';
 import { MetricsDashboard } from './components/MetricsDashboard';
 import { ApiPlayground } from './components/ApiPlayground';
 import { CodeExplorer } from './components/CodeExplorer';
+import { UnraidTemplateView } from './components/UnraidTemplateView';
 import { AudioPlayerBar } from './components/AudioPlayerBar';
 import { AppConfig, DownloadTask, MusicTrack, SystemMetrics } from './types';
 
@@ -174,6 +175,8 @@ export function App() {
             onUpdateConfig={handleUpdateConfig}
           />
         )}
+
+        {activeTab === 'unraid' && <UnraidTemplateView />}
 
         {activeTab === 'metrics' && (
           <MetricsDashboard metrics={metrics} logs={logs} />

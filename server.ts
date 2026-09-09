@@ -806,6 +806,20 @@ app.get(["/downloads", "/api/downloads"], (req: Request, res: Response) => {
   });
 });
 
+// GET /unraid-template.xml & /api/unraid-template.xml - Serves raw Unraid XML template for wget / manual import
+app.get(["/unraid-template.xml", "/api/unraid-template.xml"], (req: Request, res: Response) => {
+  const filePath = path.join(process.cwd(), "unraid-template.xml");
+  if (fs.existsSync(filePath)) {
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    if (req.query.download === "true") {
+      res.setHeader("Content-Disposition", 'attachment; filename="my-naviproxy.xml"');
+    }
+    res.sendFile(filePath);
+  } else {
+    res.status(404).json({ error: "Template file unraid-template.xml not found" });
+  }
+});
+
 // GET /api/go-project - Returns structured Go codebase, Dockerfile, docker-compose, etc. for in-browser inspection
 app.get("/api/go-project", (req: Request, res: Response) => {
   try {

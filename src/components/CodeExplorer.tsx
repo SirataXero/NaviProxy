@@ -107,6 +107,46 @@ volumes:
 `,
   },
   {
+    name: 'unraid-template.xml',
+    category: 'Docker & Deploy',
+    lang: 'xml',
+    description: 'Unraid Docker XML Container Template (v2) for immediate wget & manual template import',
+    content: `<?xml version="1.0"?>
+<Container version="2">
+  <Name>naviproxy</Name>
+  <Repository>ghcr.io/your-username/naviproxy:latest</Repository>
+  <Registry>https://github.com/your-username/naviproxy/pkgs/container/naviproxy</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/your-username/naviproxy/issues</Support>
+  <Project>https://github.com/your-username/naviproxy</Project>
+  <Overview>NaviProxy is an intelligent music proxy between third-party applications (Symfonium, Feishin, DSub, Ultrasonic) and your Navidrome music server. It features multi-source concurrent search (Tidal, Spotify, Apple Music, Deezer, Debrid, Usenet), quality-based threshold filtering, and simultaneous background library caching into your Navidrome storage directory.</Overview>
+  <Category>MediaApp:Music MediaApp:Other Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <TemplateURL>false</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/deluan/navidrome/master/resources/logo-192.png</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1725840000</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="Web UI &amp; API Port" Target="8080" Default="8080" Mode="tcp" Description="Web UI &amp; Subsonic API proxy port" Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+  <Config Name="Music Library Path" Target="/music" Default="/mnt/user/music" Mode="rw" Description="Shared Navidrome music directory where downloaded tracks are persisted and scanned" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/music</Config>
+  <Config Name="AppData Config Storage" Target="/config" Default="/mnt/user/appdata/naviproxy" Mode="rw" Description="Persistent configuration and plugin credentials directory" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/naviproxy</Config>
+  <Config Name="Navidrome Server URL" Target="NAVIDROME_URL" Default="http://[IP]:4533" Description="Full URL to your Navidrome server instance" Type="Variable" Display="always" Required="true" Mask="false">http://192.168.1.100:4533</Config>
+  <Config Name="Navidrome Username" Target="NAVIDROME_USER" Default="admin" Description="Navidrome username for local library checks" Type="Variable" Display="always" Required="true" Mask="false">admin</Config>
+  <Config Name="Navidrome Auth Token / Salt" Target="NAVIDROME_TOKEN" Default="" Description="Navidrome auth token or user password" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Redis Cache URL" Target="REDIS_URL" Default="redis://[IP]:6379" Description="Redis cache URL for L2 sub-millisecond search caching (optional)" Type="Variable" Display="always" Required="false" Mask="false">redis://192.168.1.100:6379</Config>
+  <Config Name="Download Subfolder" Target="DOWNLOAD_DIR" Default="/music/downloads" Description="Container path for saving newly downloaded audio tracks" Type="Variable" Display="advanced" Required="false" Mask="false">/music/downloads</Config>
+  <Config Name="Minimum Audio Quality" Target="MIN_QUALITY" Default="HIGH_MP3_320" Description="Minimum audio quality threshold (LOW_MP3_128, MID_MP3_256, HIGH_MP3_320, CD_FLAC_16_44, HIRES_FLAC_24_96, HIRES_FLAC_24_192)" Type="Variable" Display="advanced" Required="false" Mask="false">HIGH_MP3_320</Config>
+</Container>
+`,
+  },
+  {
     name: 'pkg/plugins/interface.go',
     category: 'Go Backend',
     lang: 'go',

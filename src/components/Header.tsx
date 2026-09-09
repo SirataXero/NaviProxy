@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio, Database, ShieldCheck, Activity, Download, Server } from 'lucide-react';
+import { Radio, Database, ShieldCheck, Activity, Download, Server, HardDrive } from 'lucide-react';
 import { AppConfig, SystemMetrics } from '../types';
 
 interface HeaderProps {
@@ -22,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'plugins', label: 'Source Plugins', icon: ShieldCheck },
     { id: 'quality', label: 'Quality Rules', icon: Database },
     { id: 'downloads', label: 'Downloads', icon: Download, badge: activeDownloadsCount },
+    { id: 'unraid', label: 'Unraid Template', icon: HardDrive },
     { id: 'metrics', label: 'Performance & Logs', icon: Activity },
     { id: 'api', label: 'API & Subsonic', icon: Server },
     { id: 'code', label: 'Go & Docker Code', icon: Database },

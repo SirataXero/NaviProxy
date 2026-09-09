@@ -1,4 +1,13 @@
 # Multi-stage Docker build for NaviProxy (Navidrome Music Proxy)
+
+# Stage 0: Build React Frontend
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app
+COPY package.json bun.lock* ./
+RUN npm install
+COPY . .
+RUN npm run build
+
 # Stage 1: Build binary using official Go compiler
 FROM golang:1.22-alpine AS builder
 
@@ -26,6 +35,8 @@ WORKDIR /app
 
 # Copy binary from builder stage
 COPY --from=builder /app/naviproxy /app/naviproxy
+# Copy frontend static files from frontend-builder stage
+COPY --from=frontend-builder /app/dist /app/public
 
 # Create directories for configuration, cache and downloaded music
 RUN mkdir -p /app/data /music/downloads /music/navidrome_library

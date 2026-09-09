@@ -76,11 +76,25 @@ func (h *APIHandler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/health", h.HandleHealth).Methods("GET")
 	router.HandleFunc("/metrics", h.HandleMetrics).Methods("GET")
 	router.HandleFunc("/tasks", h.HandleListTasks).Methods("GET")
+	router.HandleFunc("/downloads", h.HandleListTasks).Methods("GET")
+	router.HandleFunc("/api/downloads", h.HandleListTasks).Methods("GET")
 
 	// Subsonic API Compatibility Mode (for Symfonium, DSub, Ultrasonic, Feishin)
 	router.HandleFunc("/rest/search3.view", h.HandleSubsonicSearch).Methods("GET")
 	router.HandleFunc("/rest/stream.view", h.HandleSubsonicStream).Methods("GET")
 	router.HandleFunc("/rest/ping.view", h.HandleSubsonicPing).Methods("GET")
+
+	// Dev mode / UI specific endpoints (Returns mock or disabled in prod)
+	router.HandleFunc("/api/docker-compose", func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, `{"error": "Docker config is managed via Unraid/Host in production."}`, http.StatusNotFound)
+	}).Methods("GET", "POST")
+	
+	router.HandleFunc("/api/go-project", func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, `{"error": "Code explorer not available in production."}`, http.StatusNotFound)
+	}).Methods("GET")
+
+	// Serve static frontend files
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("/app/public")))
 }
 
 // HandleSearch implements GET /search?q={query}&type={song|artist|album}&quality={min_quality}

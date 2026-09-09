@@ -16,3 +16,4 @@ services:
       - REDIS_URL=redis://192.168.1.100:6379
       - DOWNLOAD_DIR=/music/downloads
       - MIN_QUALITY=HIGH_MP3_320
+      - LOG_LEVEL=debug # Options: light, normal, debug

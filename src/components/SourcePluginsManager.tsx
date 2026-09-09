@@ -249,7 +249,7 @@ export const SourcePluginsManager: React.FC<SourcePluginsManagerProps> = ({
                     <div className="flex items-center space-x-2">
                       <h4 className="text-sm font-bold text-zinc-100">{plugin.name}</h4>
                       <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-mono">
-                        Max: {plugin.maxQuality.replace(/_/g, ' ')}
+                        Max: {String(plugin.maxQuality).replace(/_/g, ' ')}
                       </span>
                       {plugin.lastHealthCheck && (
                         <span className="text-[10px] text-zinc-500 font-mono">

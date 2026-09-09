@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"context"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
 	"io"
 	"os"
@@ -59,6 +60,7 @@ func (d *Downloader) SetProgressCallback(cb func(task *DownloadTask)) {
 }
 
 func (d *Downloader) Queue(track plugins.MusicTrack) (*DownloadTask, error) {
+	logger.Debug("Queueing download for track: %s - %s", track.Artist, track.Title)
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -104,6 +106,7 @@ func (d *Downloader) workerLoop() {
 }
 
 func (d *Downloader) executeDownload(task *DownloadTask) {
+	logger.Debug("Executing download task: %s", task.ID)
 	d.mu.Lock()
 	task.Status = "downloading"
 	d.mu.Unlock()
@@ -184,6 +187,7 @@ func (d *Downloader) executeDownload(task *DownloadTask) {
 
 	now := time.Now()
 	d.mu.Lock()
+	logger.Debug("Download task %s completed successfully", task.ID)
 	task.Status = "completed"
 	task.Progress = 100.0
 	task.CompletedAt = &now

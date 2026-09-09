@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800">
               <span className="text-zinc-400">Min Quality:</span>
               <span className="text-amber-400 font-medium">
-                {config?.quality?.minQuality?.replace(/_/g, ' ') || 'MP3 320k'}
+                {String(config?.quality?.minQuality || "HIGH_MP3_320").replace(/_/g, ' ') || 'MP3 320k'}
               </span>
             </div>
 

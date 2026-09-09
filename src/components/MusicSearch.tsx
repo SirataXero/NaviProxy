@@ -242,7 +242,7 @@ export const MusicSearch: React.FC<MusicSearchProps> = ({
               <div className="flex items-center space-x-1 px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300">
                 <Info className="w-3.5 h-3.5" />
                 <span>
-                  Filtered out <strong className="font-bold">{searchResponse.filteredOutCount}</strong> tracks below threshold ({selectedQuality.replace(/_/g, ' ')})
+                  Filtered out <strong className="font-bold">{searchResponse.filteredOutCount}</strong> tracks below threshold ({String(selectedQuality).replace(/_/g, ' ')})
                 </span>
               </div>
             )}

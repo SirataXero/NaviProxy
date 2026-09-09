@@ -43,6 +43,7 @@ RUN mkdir -p /app/data /music/downloads /music/navidrome_library
 
 # Environment variables
 ENV PORT=8080 \
+    LOG_LEVEL=normal \
     CONFIG_PATH=/app/data/config \
     DOWNLOAD_FOLDER=/music/downloads \
     GIN_MODE=release

@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"context"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
 	"time"
 
@@ -53,6 +54,7 @@ func NewService(r *plugins.Registry, c *cache.Service, cfg *config.Manager, d *D
 // 4. Applies quality-based filtering (drops tracks below min_quality threshold)
 // 5. Caches the unified result for sub-100ms subsequent queries
 func (s *Service) Search(ctx context.Context, req plugins.SearchRequest) (*UnifiedSearchResponse, error) {
+	logger.Debug("Initiating unified search for query: '%s' (type: %s, minQuality: %s)", req.Query, req.Type, req.MinQuality)
 	start := time.Now()
 	cfg := s.configMgr.Get()
 
@@ -62,6 +64,7 @@ func (s *Service) Search(ctx context.Context, req plugins.SearchRequest) (*Unifi
 	}
 
 	cacheKey := fmt.Sprintf("search:%s:%s:%d", req.Query, req.Type, req.MinQuality)
+	logger.Debug("Checking cache for key: %s", cacheKey)
 	var cachedResp UnifiedSearchResponse
 	if s.cache.Get(ctx, cacheKey, &cachedResp) {
 		cachedResp.Cached = true
@@ -137,6 +140,7 @@ func (s *Service) Search(ctx context.Context, req plugins.SearchRequest) (*Unifi
 
 // GetStream retrieves stream from specified source plugin
 func (s *Service) GetStream(ctx context.Context, sourceID string, trackID string) (*plugins.StreamInfo, error) {
+	logger.Debug("Initiating stream request for source: %s, track: %s", sourceID, trackID)
 	plugin, ok := s.registry.Get(sourceID)
 	if !ok {
 		return nil, fmt.Errorf("source plugin %s is not active or not found", sourceID)

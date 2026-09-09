@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"fmt"
 	"io"
 	"net/http"
@@ -99,6 +100,7 @@ func (h *APIHandler) RegisterRoutes(router *mux.Router) {
 
 // HandleSearch implements GET /search?q={query}&type={song|artist|album}&quality={min_quality}
 func (h *APIHandler) HandleSearch(w http.ResponseWriter, r *http.Request) {
+	logger.Debug("Received API search request: %s", r.URL.String())
 	atomic.AddInt64(&h.searchCounter, 1)
 
 	q := r.URL.Query().Get("q")
@@ -137,6 +139,8 @@ func (h *APIHandler) HandleSearch(w http.ResponseWriter, r *http.Request) {
 
 // HandleStream implements GET /stream/{source}/{id} - Stream from source with chunked transfer
 func (h *APIHandler) HandleStream(w http.ResponseWriter, r *http.Request) {
+	logger.Debug("Retrieving streaming proxy chunks for: %s", r.URL.Path)
+	logger.Debug("Received API stream request: %s", r.URL.String())
 	atomic.AddInt64(&h.streamCounter, 1)
 	vars := mux.Vars(r)
 	source := vars["source"]
@@ -198,6 +202,7 @@ func (h *APIHandler) HandleDownload(w http.ResponseWriter, r *http.Request) {
 
 // HandleGetConfig implements GET /config - Retrieve current configuration
 func (h *APIHandler) HandleGetConfig(w http.ResponseWriter, r *http.Request) {
+	logger.Debug("Serving config to client")
 	cfg := h.configMgr.Get()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(cfg)
@@ -205,6 +210,7 @@ func (h *APIHandler) HandleGetConfig(w http.ResponseWriter, r *http.Request) {
 
 // HandleUpdateConfig implements POST /config - Update configuration
 func (h *APIHandler) HandleUpdateConfig(w http.ResponseWriter, r *http.Request) {
+	logger.Debug("Updating proxy configuration")
 	var newCfg config.AppConfig
 	if err := json.NewDecoder(r.Body).Decode(&newCfg); err != nil {
 		http.Error(w, `{"error": "invalid json body"}`, http.StatusBadRequest)

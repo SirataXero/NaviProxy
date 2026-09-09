@@ -40,6 +40,32 @@ export function App() {
     return () => clearInterval(interval);
   }, []);
 
+  
+  const mapQualityTierFromGo = (val: any): QualityTier => {
+    if (typeof val === 'string') return val as QualityTier;
+    switch (val) {
+      case 1: return 'LOW_MP3_128';
+      case 2: return 'MID_MP3_256';
+      case 3: return 'HIGH_MP3_320';
+      case 4: return 'CD_FLAC_16_44';
+      case 5: return 'HIRES_FLAC_24_96';
+      case 6: return 'HIRES_FLAC_24_192';
+      default: return 'HIGH_MP3_320';
+    }
+  };
+
+  const mapQualityTierToGo = (val: QualityTier): number => {
+    switch (val) {
+      case 'LOW_MP3_128': return 1;
+      case 'MID_MP3_256': return 2;
+      case 'HIGH_MP3_320': return 3;
+      case 'CD_FLAC_16_44': return 4;
+      case 'HIRES_FLAC_24_96': return 5;
+      case 'HIRES_FLAC_24_192': return 6;
+      default: return 3;
+    }
+  };
+
   const mapConfig = (data: any): AppConfig => {
     // Fill in default values to prevent crashes in SourcePluginsManager
     const defaultSources = {
@@ -77,7 +103,7 @@ export function App() {
       },
       sources: mappedSources,
       quality: {
-        minQuality: data.min_quality || 'HIGH_MP3_320',
+        minQuality: mapQualityTierFromGo(data.min_quality),
         allowLowerIfUnavailable: false,
         preferredFormat: 'flac',
       },
@@ -196,7 +222,7 @@ export function App() {
           navidrome_token: newConfig.navidrome.token,
           navidrome_salt: newConfig.navidrome.salt,
           download_folder: newConfig.downloads.folder,
-          min_quality: newConfig.quality.minQuality,
+          min_quality: mapQualityTierToGo(newConfig.quality.minQuality),
           auto_trigger_download: newConfig.downloads.autoTriggerOnStream,
           concurrent_limit: newConfig.downloads.concurrentLimit,
           sources: newConfig.sources.reduce((acc, src) => {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/navidrome/naviproxy/pkg/logger"
 	"log"
 	"net/http"
 	"os"
@@ -31,12 +32,13 @@ func main() {
 
 	redisAddr := os.Getenv("REDIS_ADDR")
 
-	log.Println("[NaviProxy] Initializing Navidrome Music Proxy Service...")
+	logger.Init()
+	logger.Info("Initializing Navidrome Music Proxy Service...")
 
 	// 1. Initialize Configuration Manager
 	cfgMgr, err := config.NewManager(configPath)
 	if err != nil {
-		log.Fatalf("Failed to initialize config manager: %v", err)
+		logger.Fatal("Failed to initialize config manager: %v", err)
 	}
 
 	// 2. Initialize Cache Service (Hybrid LRU in-memory + Redis)
@@ -55,7 +57,7 @@ func main() {
 	registry.Register(plugins.NewDebridPlugin(), 7, true)
 	registry.Register(plugins.NewUsenetPlugin(), 8, true)
 
-	log.Println("[NaviProxy] 8 source plugins loaded (Navidrome, Tidal, Spotify, Apple Music, Deezer, YouTube Music, Debrid, Usenet)")
+	logger.Info("8 source plugins loaded (Navidrome, Tidal, Spotify, Apple Music, Deezer, YouTube Music, Debrid, Usenet)")
 
 	// 4. Initialize Async Downloader
 	downloader := proxy.NewDownloader(registry, cfgMgr, 4)
@@ -90,21 +92,21 @@ func main() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		log.Printf("[NaviProxy] HTTP Web Service listening on :%s\n", port)
+		logger.Info("[NaviProxy] HTTP Web Service listening on :%s\n", port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Server failed: %v", err)
+			logger.Fatal("Server failed: %v", err)
 		}
 	}()
 
 	<-stop
-	log.Println("[NaviProxy] Shutting down gracefully...")
+	logger.Info("Shutting down gracefully...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Printf("Forced shutdown error: %v", err)
+		logger.Info("Forced shutdown error: %v", err)
 	}
 
-	log.Println("[NaviProxy] Server exited cleanly.")
+	logger.Info("Server exited cleanly.")
 }
